@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name:Brendan Cahill
+# OSU Email:cahillbr@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment:5
+# Due Date:5/30/23
+# Description:min heap
 
 
 from dynamic_array import *
