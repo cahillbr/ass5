@@ -1,4 +1,4 @@
- Name:
+# Name:
 # OSU Email:
 # Course: CS261 - Data Structures
 # Assignment:
@@ -247,6 +247,7 @@ def _percolate_down(da: DynamicArray, parent: int) -> None:
             return
         da[smaller_idx], da[parent] = da[parent], da[smaller_idx]
         parent = smaller_idx
+
 
 # ------------------- BASIC TESTING -----------------------------------------
 
