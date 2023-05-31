@@ -40,28 +40,32 @@ class MinHeap:
         return 'HEAP ' + str(heap_data)
 
     def add(self, node: object) -> None:
-        self._heap.append(node)
-        node_index = self._heap.length() - 1
+        """
+        Adds a node to the heap while maintaining the heap property.
+        """
+        self._heap.append(node)  # Append the node to the end of the heap
+        node_index = self._heap.length() - 1  # Get the index of the added node
 
+        # Percolate the node up the heap until it reaches the correct position
         while node_index > 0:
-            parent_index = (node_index - 1) // 2
+            parent_index = (node_index - 1) // 2  # Calculate the parent index
 
             if self._heap[parent_index] <= self._heap[node_index]:
-                break
+                break  # Break if the parent is smaller or equal to the node
             else:
+                # Swap the parent and the node if the parent is larger
                 self._heap[parent_index], self._heap[node_index] = self._heap[node_index], self._heap[parent_index]
                 node_index = parent_index
 
     def is_empty(self) -> bool:
         """
-        Return True if the heap is empty; otherwise, it returns False.
-        The runtime complexity of this implementation is O(1).
+        Returns True if the heap is empty, False otherwise.
         """
         return self._heap.length() == 0
 
     def get_min(self) -> object:
         """
-        Return the minimum key in the heap.
+        Returns the minimum key in the heap.
         """
         if self._heap.is_empty():
             raise MinHeapException("MinHeap is empty")
@@ -69,14 +73,7 @@ class MinHeap:
 
     def remove_min(self) -> object:
         """
-        This method returns an object with the minimum key, and removes it from the heap.
-        If the heap is empty, the method raises a MinHeapException.
-
-        For the downward percolation of the replacement node:
-        if both children of the node have the same value (and are both smaller than the node),
-        swap with the left child.
-
-        The runtime complexity of this implementation must be O(log N).
+        Removes and returns the minimum key from the heap.
         """
         if self.is_empty():
             raise MinHeapException("MinHeap is empty")
@@ -87,7 +84,7 @@ class MinHeap:
         self._heap[0] = last_leaf_node
         self._heap.pop()
 
-        # Perform a downward percolation to restore heap property
+        # Percolate the replacement node down the heap to restore the heap property
         current_index = 0
         while current_index < self._heap.length():
             left_child_index = 2 * current_index + 1
@@ -121,21 +118,23 @@ class MinHeap:
 
     def build_heap(self, da: DynamicArray) -> None:
         """
-        This method receives a DynamicArray with objects in any order, and builds a proper MinHeap from them. The current content of the MinHeap is overwritten. The runtime complexity of this implementation must be O(N).
+        Builds a proper MinHeap from the given DynamicArray.
         """
-        self._heap = DynamicArray(list(da))
+        self._heap = DynamicArray(list(da))  # Create a new heap from the DynamicArray
 
+        # Perform a bottom-up heapify process on the heap
         for i in range(self._heap.length() // 2, -1, -1):
             self._min_heapify(i)
 
     def _min_heapify(self, i: int) -> None:
         """
-        This method takes an index of a node and makes a heap of the subtree rooted at this node.
+        Makes a heap of the subtree rooted at the given index.
         """
         smallest = i
         left = 2 * i + 1
         right = 2 * i + 2
 
+        # Find the index of the smallest value among the node and its children
         if left < self._heap.length() and self._heap[left] < self._heap[smallest]:
             smallest = left
 
@@ -143,23 +142,30 @@ class MinHeap:
             smallest = right
 
         if smallest != i:
+            # Swap the node with the smallest child and recursively heapify
             self._heap[i], self._heap[smallest] = self._heap[smallest], self._heap[i]
             self._min_heapify(smallest)
 
     def size(self) -> int:
+        """
+        Returns the number of elements in the heap.
+        """
         return self._heap.length()
 
     def clear(self) -> None:
+        """
+        Clears the heap by resetting it to an empty state.
+        """
         self._heap = DynamicArray()
 
 
 def heapsort(da: DynamicArray) -> None:
     """
-    This function receives a DynamicArray and sorts its content
-    in non-ascending order, using the Heapsort algorithm.
+    Sorts the content of the given DynamicArray using the Heapsort algorithm.
     """
     n = da.length()
 
+    # Build a max heap
     for i in range(n // 2 - 1, -1, -1):
         parent = i
         while parent * 2 + 1 < n:
@@ -172,6 +178,7 @@ def heapsort(da: DynamicArray) -> None:
             else:
                 break
 
+    # Extract elements from the heap one by one
     for i in range(n - 1, 0, -1):
         da[0], da[i] = da[i], da[0]
         parent = 0
@@ -185,6 +192,7 @@ def heapsort(da: DynamicArray) -> None:
             else:
                 break
 
+    # Reverse the sorted array to obtain non-ascending order
     start = 0
     end = da.length() - 1
 
@@ -196,12 +204,11 @@ def heapsort(da: DynamicArray) -> None:
 
 def heap_sort(da: DynamicArray) -> None:
     """
-    This function receives a DynamicArray and sorts its content
-    in non-ascending order, using the Heapsort algorithm.
+    Sorts the content of the given DynamicArray using the Heapsort algorithm.
     """
     n = da.length()
 
-    # Build max heap
+    # Build a max heap
     for i in range(n // 2 - 1, -1, -1):
         parent = i
         while parent * 2 + 1 < n:
@@ -214,7 +221,7 @@ def heap_sort(da: DynamicArray) -> None:
             else:
                 break
 
-    # Extract elements from heap one by one
+    # Extract elements from the heap one by one
     for i in range(n - 1, 0, -1):
         da[0], da[i] = da[i], da[0]
         parent = 0
@@ -228,16 +235,20 @@ def heap_sort(da: DynamicArray) -> None:
             else:
                 break
 
+    # Reverse the sorted array to obtain non-ascending order
+    start = 0
+    end = da.length() - 1
 
-# It's highly recommended that you implement the following optional          #
-# function for percolating elements down the MinHeap. You can call           #
-# this from inside the MinHeap class. You may edit the function definition.  #
+    while start < end:
+        da[start], da[end] = da[end], da[start]
+        start += 1
+        end -= 1
+
 
 def _percolate_down(da: DynamicArray, parent: int) -> None:
     """
-     Swapping a node with its children until the node
-     is swapped into a position on the heap where it is already less
-     than both children
+    Swaps a node with its children until the node is swapped into a position
+    on the heap where it is already less than both children.
     """
     while (2 * parent + 1) < da.length():
         smaller_idx = 2 * parent + 1
@@ -247,7 +258,6 @@ def _percolate_down(da: DynamicArray, parent: int) -> None:
             return
         da[smaller_idx], da[parent] = da[parent], da[smaller_idx]
         parent = smaller_idx
-
 
 # ------------------- BASIC TESTING -----------------------------------------
 
